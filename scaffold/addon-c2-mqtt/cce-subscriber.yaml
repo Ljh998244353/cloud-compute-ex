@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-subscriber
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-subscriber
+  template:
+    metadata:
+      labels:
+        app: mqtt-subscriber
+    spec:
+      containers:
+        - name: subscriber
+          image: swr.cn-east-3.myhuaweicloud.com/cloud-ljh-ys/mqtt-edge:v1
+          command: ["python", "subscriber.py"]
+          env:
+            - name: BROKER_HOST
+              value: mosquitto-svc
+            - name: BROKER_PORT
+              value: "1883"
+            - name: MQTT_TOPIC
+              value: edge/sensor
+            - name: REDIS_HOST
+              value: redis-svc
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: password

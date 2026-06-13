@@ -1,0 +1,21 @@
+# Python/runtime caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environment and secrets
+.env
+.env.*
+*.kubeconfig
+kubeconfig*
+
+# Large original/offline resource packages kept locally only
+asst/*.7z
+asst/*.tar.gz
+resources/helm-v4.2.0/
+resources/离线包/**/*.tar
+resources/离线包/**/*.tgz
+
+# Local generated outputs
+*.log
+*.tmp

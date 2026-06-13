@@ -1,0 +1,54 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scaffold/part1-app/**"
+      - "scaffold/part1-k8s/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+env:
+  SWR_REGISTRY: swr.cn-east-3.myhuaweicloud.com
+  BACKEND_IMAGE: swr.cn-east-3.myhuaweicloud.com/${{ secrets.SWR_ORG }}/backend
+  FRONTEND_IMAGE: swr.cn-east-3.myhuaweicloud.com/${{ secrets.SWR_ORG }}/frontend
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Login to SWR
+        run: echo "${{ secrets.SWR_SK }}" | docker login "$SWR_REGISTRY" -u "cn-east-3@${{ secrets.SWR_AK }}" --password-stdin
+
+      - name: Build backend image
+        run: docker build --provenance=false -t "$BACKEND_IMAGE:$IMAGE_TAG" scaffold/part1-app/backend
+
+      - name: Build frontend image
+        run: docker build --provenance=false -t "$FRONTEND_IMAGE:$IMAGE_TAG" scaffold/part1-app/frontend
+
+      - name: Push images
+        run: |
+          docker push "$BACKEND_IMAGE:$IMAGE_TAG"
+          docker push "$FRONTEND_IMAGE:$IMAGE_TAG"
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Update deployments
+        run: |
+          kubectl set image deployment/backend backend="$BACKEND_IMAGE:$IMAGE_TAG" --namespace default
+          kubectl set image deployment/frontend frontend="$FRONTEND_IMAGE:$IMAGE_TAG" --namespace default
+          kubectl rollout status deployment/backend --namespace default --timeout=180s
+          kubectl rollout status deployment/frontend --namespace default --timeout=180s

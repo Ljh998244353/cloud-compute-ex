@@ -1,0 +1,35 @@
+# 注意：任务书原文为 kubeflow.org/v1；离线包问题合集提示 mpi-operator CRD 常用 v2beta1。
+apiVersion: kubeflow.org/v2beta1
+kind: MPIJob
+metadata:
+  name: mpi-pi
+  namespace: default
+spec:
+  slotsPerWorker: 2
+  runPolicy:
+    cleanPodPolicy: Running
+  mpiReplicaSpecs:
+    Launcher:
+      replicas: 1
+      template:
+        spec:
+          containers:
+            - name: launcher
+              image: swr.cn-east-3.myhuaweicloud.com/cloud-ljh-ys/mpi4py:latest
+              command:
+                - mpirun
+                - -n
+                - "4"
+                - python
+                - /opt/mpi/pi_mpi.py
+    Worker:
+      replicas: 2
+      template:
+        spec:
+          containers:
+            - name: worker
+              image: swr.cn-east-3.myhuaweicloud.com/cloud-ljh-ys/mpi4py:latest
+              resources:
+                requests:
+                  cpu: "1"
+                  memory: "1Gi"
