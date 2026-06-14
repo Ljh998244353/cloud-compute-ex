@@ -32,16 +32,21 @@
 | `part2-spark/sparkapplication.yaml` | A-0 SparkApplication | 替换 PySpark SWR 镜像地址；按资源情况调 executor |
 | `part2-spark/wordcount.py` | A-0 示例作业 | 替换 `<BUCKET>` |
 | `part2-spark/analysis.py` | A-1/A-2/A-3 分析入口 | 补全清洗、4 个查询、性能计时 |
+| `part2-spark/pandas_benchmark.py` | A-3 性能对比 | 本地 Pandas 基准脚本 |
+| `part2-spark/plot_performance.py` | A-3 性能对比图 | 根据计时结果生成性能图 |
 
-## 第二部分：MPI 方向
+## 附加题：K3s + MQTT
 
 | 文件 | 对应任务 | 后续需要补全 |
 | --- | --- | --- |
-| `part2-mpi/mpijob.yaml` | B-0 MPIJob | 替换 mpi4py SWR 镜像地址；离线 CRD 默认用 `kubeflow.org/v2beta1` |
-| `part2-mpi/pi_mpi.py` | B-0 示例作业 | 可作为 MPI 镜像内 `/opt/mpi/pi_mpi.py` |
+| `addon-c2-mqtt/sensor_publisher.py` | C-2 边缘侧 publisher | 从环境变量读取 broker 地址并发布传感器数据 |
+| `addon-c2-mqtt/cloud_subscriber.py` | C-2 云端 subscriber | 订阅 MQTT 并写入 Redis |
+| `addon-c2-mqtt/cce-mosquitto.yaml` | C-2 云端 broker | CCE 内 Mosquitto 与 LoadBalancer |
+| `addon-c2-mqtt/cce-subscriber.yaml` | C-2 云端 subscriber | 部署 Redis 写入程序 |
+| `addon-c2-mqtt/k3s-publisher.yaml` | C-2 边缘侧 publisher | K3s Pod 清单 |
 
 ## 验证结果
 
 - YAML 基础解析已通过。
 - Python 脚本语法编译已通过。
-- 仍包含占位符，不能直接提交到集群，需要先按实际华为云信息替换。
+- 提交 GitHub 前已清理离线镜像包、缓存目录和原始截图暂存目录。

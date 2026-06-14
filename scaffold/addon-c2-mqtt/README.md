@@ -1,11 +1,15 @@
 # C-2 K3s + MQTT Edge Simulation
 
-This add-on implements the course frontier topic: a K3s edge sensor publishes MQTT messages to a cloud-side Kubernetes broker, and a subscriber stores messages in Redis.
+This add-on integrates the extra C-2 edge-computing code from `other/edge/edge`. A K3s edge sensor publishes MQTT messages to a cloud-side Kubernetes broker, and a subscriber stores messages in Redis.
 
 ## Components
 
-- `publisher.py`: runs on K3s and publishes simulated temperature/humidity data.
-- `subscriber.py`: runs on CCE, subscribes to `edge/sensor`, and writes messages to Redis.
+- `sensor_publisher.py`: runs on K3s and publishes simulated temperature/humidity data to `sensor/temperature`.
+- `cloud_subscriber.py`: runs on CCE, subscribes to `sensor/temperature`, and writes messages to Redis.
+- `publisher.py` and `subscriber.py`: compatibility entrypoints that call the two files above.
+- `mqtt_broker.py`: optional Python MQTT broker implementation from the extra code.
+- `mosquitto.yaml`: NodePort Mosquitto manifest matching the extra code's local/K3s style.
+- `Dockerfile.mosquitto`: optional Mosquitto image Dockerfile from the extra code.
 - `cce-mosquitto.yaml`: deploys Mosquitto inside CCE and exposes it through a LoadBalancer.
 - `cce-subscriber.yaml`: deploys the Redis-writing subscriber in CCE.
 - `k3s-publisher.yaml`: deploys the edge publisher in K3s.
@@ -28,7 +32,13 @@ kubectl apply -f scaffold/addon-c2-mqtt/cce-subscriber.yaml
 kubectl get pods,svc -o wide
 ```
 
-Copy the external IP of `mosquitto-lb` into `<MOSQUITTO_ELB_IP>` in `k3s-publisher.yaml`.
+Create the edge-side ConfigMap with the external IP of `mosquitto-lb`:
+
+```bash
+sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml kubectl create configmap mqtt-edge-config \
+  --from-literal=broker_host=<mosquitto-lb-external-ip> \
+  --dry-run=client -o yaml | sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml kubectl apply -f -
+```
 
 ## K3s Side
 

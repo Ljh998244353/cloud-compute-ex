@@ -19,7 +19,6 @@ def redis_client():
 
 @app.get("/api/ping")
 def ping():
-    # TODO: 后续实验可在这里增加 Redis 读写，用于证明前后端和 Redis 联通。
     return jsonify(status="ok")
 
 

@@ -18,5 +18,4 @@ CMD ["python", "app.py"]
 # ── requirements.txt 示例（按需添加其他包）─────────────
 # flask==3.0.0
 # redis==5.0.1
-# <YOUR_EXTRA_PACKAGE>   ← 学生需加入至少1个自选包
-
+# requests==2.32.3      ← 已加入的自选 Python 包

@@ -30,7 +30,6 @@ encoded_password="$(printf '%s' "${REDIS_PASSWORD}" | base64 | tr -d '\n')"
 mosquitto_elb_ip="${MOSQUITTO_ELB_IP:-<MOSQUITTO_ELB_IP>}"
 
 files=(
-  docs/report.md
   scaffold/part1-app/frontend/static/index.html
   scaffold/part1-k8s/backend-deployment.yaml
   scaffold/part1-k8s/configmap-secret.yaml
@@ -39,11 +38,9 @@ files=(
   scaffold/part2-spark/analysis.py
   scaffold/part2-spark/sparkapplication.yaml
   scaffold/part2-spark/wordcount.py
-  scaffold/part2-mpi/mpijob.yaml
   scaffold/addon-c2-mqtt/cce-subscriber.yaml
   scaffold/addon-c2-mqtt/k3s-publisher.yaml
   scaffold/addon-c2-mqtt/README.md
-  docs/execution-checklist.md
 )
 
 for file in "${files[@]}"; do

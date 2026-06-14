@@ -15,8 +15,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Douban movie Spark analysis")
     parser.add_argument(
         "--input",
-        default="s3a://cloud-ljh-ys-data/douban_movies.csv",
-        help="CSV path, for example s3a://bucket/douban_movies.csv",
+        default="file:///opt/spark/work/douban_movies.csv",
+        help="CSV path inside the container or a remote path if credentials are configured",
     )
     parser.add_argument(
         "--output",

@@ -10,8 +10,13 @@ __pycache__/
 kubeconfig*
 
 # Large original/offline resource packages kept locally only
+resources/
+fig/
+other/
 asst/*.7z
 asst/*.tar.gz
+asst/*.docx
+asst/*.pdf
 resources/helm-v4.2.0/
 resources/离线包/**/*.tar
 resources/离线包/**/*.tgz

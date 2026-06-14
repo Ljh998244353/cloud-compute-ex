@@ -1,0 +1,15 @@
+[package]
+name = "swjtu-course-report"
+version = "0.1.0"
+entrypoint = "lib.typ"
+repository = "local"
+authors = ["ljh"]
+license = "MIT-0"
+description = "A Southwest Jiaotong University course report template."
+keywords = ["report", "SWJTU", "Southwest Jiaotong University"]
+categories = ["report"]
+disciplines = ["computer-science"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"

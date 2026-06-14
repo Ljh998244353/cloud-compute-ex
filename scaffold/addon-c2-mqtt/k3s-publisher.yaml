@@ -10,15 +10,18 @@ spec:
   containers:
     - name: publisher
       image: swr.cn-east-3.myhuaweicloud.com/cloud-ljh-ys/mqtt-edge:v1
-      command: ["python", "publisher.py"]
+      command: ["python", "sensor_publisher.py"]
       env:
         - name: BROKER_HOST
-          value: "<MOSQUITTO_ELB_IP>"
+          valueFrom:
+            configMapKeyRef:
+              name: mqtt-edge-config
+              key: broker_host
         - name: BROKER_PORT
           value: "1883"
         - name: MQTT_TOPIC
-          value: edge/sensor
+          value: sensor/temperature
         - name: DEVICE_ID
-          value: k3s-edge-01
+          value: sensor_001
         - name: INTERVAL_SECONDS
-          value: "2"
+          value: "1"

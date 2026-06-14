@@ -16,14 +16,14 @@ spec:
       containers:
         - name: subscriber
           image: swr.cn-east-3.myhuaweicloud.com/cloud-ljh-ys/mqtt-edge:v1
-          command: ["python", "subscriber.py"]
+          command: ["python", "cloud_subscriber.py"]
           env:
             - name: BROKER_HOST
               value: mosquitto-svc
             - name: BROKER_PORT
               value: "1883"
             - name: MQTT_TOPIC
-              value: edge/sensor
+              value: sensor/temperature
             - name: REDIS_HOST
               value: redis-svc
             - name: REDIS_PORT
